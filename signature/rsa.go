@@ -10,6 +10,8 @@ import (
 	"encoding/pem"
 	"errors"
 	"log"
+
+	"github.com/bitly/go-simplejson"
 )
 
 type SignRSA struct {
@@ -26,6 +28,10 @@ func (sign *SignRSA) CreateSignature(queryString string) string {
 		log.Fatalf("Error signing query string: %v", err)
 	}
 	return base64.StdEncoding.EncodeToString(signature)
+}
+
+func (sign *SignRSA) SignParameters(params *simplejson.Json) (*simplejson.Json, error) {
+	return SignParameters(params, sign)
 }
 
 func (sign *SignRSA) GetAPIKey() string {

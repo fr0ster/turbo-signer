@@ -6,6 +6,8 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"errors"
+
+	"github.com/bitly/go-simplejson"
 )
 
 type SignEd25519 struct {
@@ -18,6 +20,10 @@ type SignEd25519 struct {
 func (sign *SignEd25519) CreateSignature(queryString string) string {
 	signature := ed25519.Sign(sign.privateKey, []byte(queryString))
 	return base64.StdEncoding.EncodeToString(signature)
+}
+
+func (sign *SignEd25519) SignParameters(params *simplejson.Json) (*simplejson.Json, error) {
+	return SignParameters(params, sign)
 }
 
 func (sign *SignEd25519) GetAPIKey() string {
