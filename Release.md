@@ -1,3 +1,15 @@
+# Release Notes for Turbo-Signer
+
+## v0.1.4
+
+### Release Date: 2024-09-15
+
+### Changes
+- **Refactored ValidateSignatureParams**: The function `ValidateSignatureParams` now uses parameter copying instead of modifying the parameter passed by pointer. This change prevents side effects and ensures that the original parameters remain unchanged.
+
+
+---
+
 # Release Notes for Turbo-Signer v0.1.3
 
 ## Release Date: 2024-09-15

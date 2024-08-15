@@ -26,8 +26,10 @@ func (sign *SignHMAC) SignParameters(params *simplejson.Json) (*simplejson.Json,
 
 func (sign *SignHMAC) ValidateSignatureParams(params *simplejson.Json) (result bool) {
 	// Считування сігнатури
-	unsignedParams := params
 	signature := params.Get("signature").MustString()
+	// Видалення підпису з параметрів
+	js, _ := params.MarshalJSON()
+	unsignedParams, _ := simplejson.NewJson(js)
 	unsignedParams.Del("signature")
 	expectedSignature := func() string {
 		paramsStr, err := convertSimpleJSONToString(unsignedParams)

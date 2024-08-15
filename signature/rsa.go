@@ -49,7 +49,9 @@ func (sign *SignRSA) ValidateSignatureParams(params *simplejson.Json) bool {
 		return false
 	}
 
-	unsignedParams := params
+	// Видалення підпису з параметрів
+	js, _ := params.MarshalJSON()
+	unsignedParams, _ := simplejson.NewJson(js)
 	unsignedParams.Del("signature")
 
 	message, err := convertSimpleJSONToString(unsignedParams)
