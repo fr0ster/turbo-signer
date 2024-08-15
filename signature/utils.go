@@ -17,7 +17,7 @@ func convertSimpleJSONToString(js *simplejson.Json) (string, error) {
 	return values.Encode(), nil
 }
 
-func SignParameters(params *simplejson.Json, sign Sign) (*simplejson.Json, error) {
+func signParameters(params *simplejson.Json, sign Sign) (*simplejson.Json, error) {
 	// Створення підпису
 	signature, err := convertSimpleJSONToString(params)
 	if err != nil {
