@@ -34,7 +34,7 @@ func TestParamsValidateHMAC(t *testing.T) {
 		params, err := sign.SignParameters(params)
 		assert.Nil(t, err)
 		// Валідація підпису
-		valid := sign.ValidateSignature(params)
+		valid := sign.ValidateSignatureParams(params)
 		assert.True(t, valid)
 	}()
 }
@@ -51,7 +51,7 @@ func TestParamsValidateHMACWrongSignature(t *testing.T) {
 		// Зміна підпису
 		params.Set("signature", "wrong_signature")
 		// Валідація підпису
-		valid := sign.ValidateSignature(params)
+		valid := sign.ValidateSignatureParams(params)
 		assert.False(t, valid)
 	}()
 }
@@ -104,7 +104,7 @@ MC4CAQAwBQYDK2VwBCIEIMlz8ym0r5xai1MbDRJo+8HwkaVXWknuQhfFrphnpNwC
 		params, err = sign.SignParameters(params)
 		assert.Nil(t, err)
 		// Валідація підпису
-		valid := sign.ValidateSignature(params)
+		valid := sign.ValidateSignatureParams(params)
 		assert.True(t, valid)
 	}()
 }
@@ -132,7 +132,7 @@ MC4CAQAwBQYDK2VwBCIEIMlz8ym0r5xai1MbDRJo+8HwkaVXWknuQhfFrphnpNwC
 		// Зміна підпису
 		params.Set("signature", "wrong_signature")
 		// Валідація підпису
-		valid := sign.ValidateSignature(params)
+		valid := sign.ValidateSignatureParams(params)
 		assert.False(t, valid)
 	}()
 }
@@ -247,7 +247,7 @@ bSPd4xwzzEbd4WCAodhFMw==
 		params, err = sign.SignParameters(params)
 		assert.Nil(t, err)
 		// Валідація підпису
-		valid := sign.ValidateSignature(params)
+		valid := sign.ValidateSignatureParams(params)
 		assert.True(t, valid)
 	}()
 }
@@ -306,7 +306,7 @@ bSPd4xwzzEbd4WCAodhFMw==
 		// Зміна підпису
 		params.Set("signature", "wrong_signature")
 		// Валідація підпису
-		valid := sign.ValidateSignature(params)
+		valid := sign.ValidateSignatureParams(params)
 		assert.False(t, valid)
 	}()
 }

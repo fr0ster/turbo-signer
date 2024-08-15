@@ -43,7 +43,7 @@ func (sign *SignRSA) SignParameters(params *simplejson.Json) (*simplejson.Json, 
 }
 
 // Функція для валідації підпису
-func (sign *SignRSA) ValidateSignature(params *simplejson.Json) bool {
+func (sign *SignRSA) ValidateSignatureParams(params *simplejson.Json) bool {
 	signature, err := params.Get("signature").String()
 	if err != nil {
 		return false
@@ -57,6 +57,10 @@ func (sign *SignRSA) ValidateSignature(params *simplejson.Json) bool {
 		return false
 	}
 
+	return sign.ValidateSignature(message, signature)
+}
+
+func (sign *SignRSA) ValidateSignature(message, signature string) bool {
 	signatureBytes, err := base64.StdEncoding.DecodeString(signature)
 	if err != nil {
 		return false

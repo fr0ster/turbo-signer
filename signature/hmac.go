@@ -24,7 +24,7 @@ func (sign *SignHMAC) SignParameters(params *simplejson.Json) (*simplejson.Json,
 	return signParameters(params, sign)
 }
 
-func (sign *SignHMAC) ValidateSignature(params *simplejson.Json) (result bool) {
+func (sign *SignHMAC) ValidateSignatureParams(params *simplejson.Json) (result bool) {
 	// Считування сігнатури
 	unsignedParams := params
 	signature := params.Get("signature").MustString()
@@ -34,12 +34,15 @@ func (sign *SignHMAC) ValidateSignature(params *simplejson.Json) (result bool) {
 		if err != nil {
 			return ""
 		}
-		return sign.CreateSignature(paramsStr)
+		return paramsStr
 	}
 
+	return sign.ValidateSignature(expectedSignature(), signature)
+}
+
+func (sign *SignHMAC) ValidateSignature(message, signature string) bool {
 	// Порівняння створеного підпису з наданим
-	result = expectedSignature() == signature
-	return
+	return sign.CreateSignature(message) == signature
 }
 
 func (sign *SignHMAC) GetAPIKey() string {

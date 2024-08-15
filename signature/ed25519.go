@@ -35,7 +35,7 @@ func (sign *SignEd25519) SignParameters(params *simplejson.Json) (*simplejson.Js
 }
 
 // Функція для валідації підпису
-func (sign *SignEd25519) ValidateSignature(params *simplejson.Json) bool {
+func (sign *SignEd25519) ValidateSignatureParams(params *simplejson.Json) bool {
 	// Витягування підпису з параметрів
 	signature, err := params.Get("signature").String()
 	if err != nil {
@@ -53,6 +53,11 @@ func (sign *SignEd25519) ValidateSignature(params *simplejson.Json) bool {
 		return false
 	}
 
+	// Валідація підпису
+	return sign.ValidateSignature(message, signature)
+}
+
+func (sign *SignEd25519) ValidateSignature(message, signature string) bool {
 	// Перетворення підпису з Base64 у байти
 	signatureBytes, err := base64.StdEncoding.DecodeString(signature)
 	if err != nil {

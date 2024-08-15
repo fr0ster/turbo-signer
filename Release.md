@@ -2,6 +2,63 @@
 
 ## Release Date: 2024-09-15
 
+## Changes
+- **Renamed Function**: The function `ValidateSignature` has been renamed to `ValidateSignatureParams` to better reflect its purpose.
+- **New Function**: Added a new function `ValidateSignature(string, string) bool` to provide a more straightforward way to validate signatures.
+
+## Example Usage
+### ValidateSignatureParams
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/fr0ster/turbo-signer"
+)
+
+func main() {
+    sign := signature.NewSignHMAC("apy_key", "apy_secret")
+	params := simplejson.New()
+    params := simplejson.New()
+    params.Set("timestamp", 1610612740000)
+
+    // Створення підпису
+    params, err := sign.SignParameters(params)
+
+    // Валідація підпису
+    valid := sign.ValidateSignatureParams(params)
+    fmt.Println("Signature valid:", valid)
+}
+
+```
+### ValidateSignature
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/fr0ster/turbo-signer"
+)
+
+func main() {
+    sign := signature.NewSignHMAC("apy_key", "apy_secret")
+    data := "example_data"
+
+    // Створення підпису
+    signature := sign.CreateSignature(data)
+
+    valid := turbo_signer.ValidateSignature(data, signature)
+    fmt.Println("Signature valid:", valid)
+}
+
+```
+
+---
+
+# Release Notes for Turbo-Signer v0.1.2
+
+## Release Date: 2024-09-15
+
 ### Introduction
 Turbo-Signer is a library designed to sign parameters for RESTful and WebSocket API calls. This library ensures secure and authenticated communication with various APIs by generating the necessary signatures for your requests.
 

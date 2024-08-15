@@ -8,7 +8,8 @@ type (
 	Sign      interface {
 		CreateSignature(queryString string) string
 		SignParameters(params *simplejson.Json) (*simplejson.Json, error)
-		ValidateSignature(params *simplejson.Json) bool
+		ValidateSignatureParams(params *simplejson.Json) bool
+		ValidateSignature(string, string) bool
 		GetAPIKey() string
 	}
 )
