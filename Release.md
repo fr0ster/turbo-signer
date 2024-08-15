@@ -1,4 +1,4 @@
-# Release Notes for Turbo-Signer v0.1.2
+# Release Notes for Turbo-Signer v0.1.3
 
 ## Release Date: 2024-09-15
 
