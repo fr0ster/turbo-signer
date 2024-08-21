@@ -7,7 +7,7 @@ import (
 	"github.com/bitly/go-simplejson"
 )
 
-func convertSimpleJSONToString(js *simplejson.Json) (string, error) {
+func ConvertSimpleJSONToString(js *simplejson.Json) (string, error) {
 	// Парсинг JSON строки
 	values := url.Values{}
 	for key, value := range js.MustMap() {
@@ -19,7 +19,7 @@ func convertSimpleJSONToString(js *simplejson.Json) (string, error) {
 
 func signParameters(params *simplejson.Json, sign Sign) (*simplejson.Json, error) {
 	// Створення підпису
-	signature, err := convertSimpleJSONToString(params)
+	signature, err := ConvertSimpleJSONToString(params)
 	if err != nil {
 		return nil, fmt.Errorf("error encoding params: %v", err)
 	}

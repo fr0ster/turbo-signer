@@ -54,7 +54,7 @@ func (sign *SignRSA) ValidateSignatureParams(params *simplejson.Json) bool {
 	unsignedParams, _ := simplejson.NewJson(js)
 	unsignedParams.Del("signature")
 
-	message, err := convertSimpleJSONToString(unsignedParams)
+	message, err := ConvertSimpleJSONToString(unsignedParams)
 	if err != nil {
 		return false
 	}

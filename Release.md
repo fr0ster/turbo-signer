@@ -1,5 +1,12 @@
 # Release Notes for Turbo-Signer
 
+## v0.1.6 - 2024-08-21
+
+### Feat
+- Made `convertSimpleJSONToString` function public by renaming it to `ConvertSimpleJSONToString`.
+
+---
+
 ## v0.1.5
 
 ### Release Date: 2024-09-15

@@ -32,7 +32,7 @@ func (sign *SignHMAC) ValidateSignatureParams(params *simplejson.Json) (result b
 	unsignedParams, _ := simplejson.NewJson(js)
 	unsignedParams.Del("signature")
 	expectedSignature := func() string {
-		paramsStr, err := convertSimpleJSONToString(unsignedParams)
+		paramsStr, err := ConvertSimpleJSONToString(unsignedParams)
 		if err != nil {
 			return ""
 		}

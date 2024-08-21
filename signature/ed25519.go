@@ -48,7 +48,7 @@ func (sign *SignEd25519) ValidateSignatureParams(params *simplejson.Json) bool {
 	unsignedParams.Del("signature")
 
 	// Отримання строки параметрів
-	message, err := convertSimpleJSONToString(unsignedParams)
+	message, err := ConvertSimpleJSONToString(unsignedParams)
 	if err != nil {
 		return false
 	}
