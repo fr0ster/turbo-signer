@@ -1,5 +1,15 @@
 # Release Notes for Turbo-Signer
 
+## v0.1.5
+
+### Release Date: 2024-09-15
+
+### Changes
+- Refactor `signParameters` function in `signature/utils.go`.
+  - This commit refactors the `signParameters` function in the `signature/utils.go` file. The function is renamed to `SignParameters` to follow the naming convention for exported functions in Go. This change ensures consistency and improves code readability.
+
+---
+
 ## v0.1.4
 
 ### Release Date: 2024-09-15

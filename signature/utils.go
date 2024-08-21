@@ -23,6 +23,14 @@ func signParameters(params *simplejson.Json, sign Sign) (*simplejson.Json, error
 	if err != nil {
 		return nil, fmt.Errorf("error encoding params: %v", err)
 	}
-	params.Set("signature", sign.CreateSignature(signature))
-	return params, nil
+	js, err := params.MarshalJSON()
+	if err != nil {
+		return nil, fmt.Errorf("error marshalling params: %v", err)
+	}
+	signedParams, err := simplejson.NewJson(js)
+	if err != nil {
+		return nil, fmt.Errorf("error creating new json: %v", err)
+	}
+	signedParams.Set("signature", sign.CreateSignature(signature))
+	return signedParams, nil
 }
