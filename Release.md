@@ -1,6 +1,16 @@
 # Release Notes for Turbo-Signer
 
-## v0.1.6 - 2024-08-21
+## v0.1.7
+
+### Release Date: 2024-08-23
+
+### Refactor
+- Refactored `signParameters` function in `signature/utils.go`.
+---
+
+## v0.1.6
+
+### Release Date: 2024-08-21
 
 ### Feat
 - Made `convertSimpleJSONToString` function public by renaming it to `ConvertSimpleJSONToString`.
