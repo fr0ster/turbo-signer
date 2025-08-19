@@ -190,10 +190,11 @@ func loadRSAPrivateKeyFromPEM(content string) (*rsa.PrivateKey, error) {
 	var privateKey *rsa.PrivateKey
 	var err error
 
-	if block.Type == "RSA PRIVATE KEY" {
+	switch block.Type {
+	case "RSA PRIVATE KEY":
 		// PKCS#1 format
 		privateKey, err = x509.ParsePKCS1PrivateKey(block.Bytes)
-	} else if block.Type == "PRIVATE KEY" {
+	case "PRIVATE KEY":
 		// PKCS#8 format
 		key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
 		if err != nil {
@@ -204,7 +205,7 @@ func loadRSAPrivateKeyFromPEM(content string) (*rsa.PrivateKey, error) {
 			return nil, errors.New("not an RSA private key")
 		}
 		privateKey = rsaKey
-	} else {
+	default:
 		return nil, errors.New("unsupported private key format")
 	}
 

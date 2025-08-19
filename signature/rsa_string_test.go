@@ -57,6 +57,7 @@ bSPd4xwzzEbd4WCAodhFMw==
 		message := "timestamp=1610612740000"
 		// Створення підпису
 		signature, err := sign.CreateSignature(message)
+		assert.NoError(t, err)
 		expected := "mEBDK0Ip4YIcvjMIEC2xEQ+1wNL4zdB4Qg8JM/KtR7gKvDzRNxhF/2UKVTyxEFfdmmk9bga+CHe5jotGsZUCKkMd2McFcDDNAmgjPWidvqzFImmb0m6mTIOwu4EaQYng4mR+EzRoiue3S/txy4iQIdkL/8W9995TVrBpysj46SCf1KeeBbYrRBPJTPBHCBqbApeMqDbBv0PBsvBMulJxwbZclVIX9OD457iQd07iFaMmKZ3WD+8AhQOqmDD0ecXTba//q2khyWMFXeIbXIoNUij2bN/GaMJO9wwdk2EUMqY3N/cVsyB/JmTVmbqmT98zH9ZSgQrnxB/RfUTUUwsS4A=="
 		assert.Equal(t, expected, signature)
 	}()
