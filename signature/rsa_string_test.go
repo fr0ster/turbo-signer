@@ -56,7 +56,7 @@ bSPd4xwzzEbd4WCAodhFMw==
 
 		message := "timestamp=1610612740000"
 		// Створення підпису
-		signature := sign.CreateSignature(message)
+		signature, err := sign.CreateSignature(message)
 		expected := "mEBDK0Ip4YIcvjMIEC2xEQ+1wNL4zdB4Qg8JM/KtR7gKvDzRNxhF/2UKVTyxEFfdmmk9bga+CHe5jotGsZUCKkMd2McFcDDNAmgjPWidvqzFImmb0m6mTIOwu4EaQYng4mR+EzRoiue3S/txy4iQIdkL/8W9995TVrBpysj46SCf1KeeBbYrRBPJTPBHCBqbApeMqDbBv0PBsvBMulJxwbZclVIX9OD457iQd07iFaMmKZ3WD+8AhQOqmDD0ecXTba//q2khyWMFXeIbXIoNUij2bN/GaMJO9wwdk2EUMqY3N/cVsyB/JmTVmbqmT98zH9ZSgQrnxB/RfUTUUwsS4A=="
 		assert.Equal(t, expected, signature)
 	}()
@@ -110,9 +110,11 @@ bSPd4xwzzEbd4WCAodhFMw==
 		assert.Nil(t, err)
 		message := "timestamp=1610612740000"
 		// Створення підпису
-		signature := sign.CreateSignature(message)
+		sig, err := sign.CreateSignature(message)
+		assert.NoError(t, err)
 		// Валідація підпису
-		valid := sign.ValidateSignature(message, signature)
+		valid, err := sign.ValidateSignature(message, sig)
+		assert.NoError(t, err)
 		assert.True(t, valid)
 	}()
 }
@@ -164,8 +166,9 @@ bSPd4xwzzEbd4WCAodhFMw==
 				privateKey)
 		assert.Nil(t, err)
 		message := "timestamp=1610612740000"
-		// Валідація підпису
-		valid := sign.ValidateSignature(message, "wrong_signature")
+		// Валідація підпису (неправильний підпис повинен дати помилку)
+		valid, err := sign.ValidateSignature(message, "wrong_signature")
+		assert.Error(t, err) // Очікуємо помилку для неправильного base64
 		assert.False(t, valid)
 	}()
 }

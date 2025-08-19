@@ -56,7 +56,8 @@ MC4CAQAwBQYDK2VwBCIEIMlz8ym0r5xai1MbDRJo+8HwkaVXWknuQhfFrphnpNwC
 		params, err = sign.SignParameters(params)
 		assert.Nil(t, err)
 		// Валідація підпису
-		valid := sign.ValidateSignatureParams(params)
+		valid, err := sign.ValidateSignatureParams(params)
+		assert.NoError(t, err)
 		assert.True(t, valid)
 	}()
 }
@@ -83,8 +84,9 @@ MC4CAQAwBQYDK2VwBCIEIMlz8ym0r5xai1MbDRJo+8HwkaVXWknuQhfFrphnpNwC
 		assert.Nil(t, err)
 		// Зміна підпису
 		params.Set("signature", "wrong_signature")
-		// Валідація підпису
-		valid := sign.ValidateSignatureParams(params)
+		// Валідація підпису (неправильний підпис повинен дати помилку)
+		valid, err := sign.ValidateSignatureParams(params)
+		assert.Error(t, err) // Очікуємо помилку для неправильного base64
 		assert.False(t, valid)
 	}()
 }

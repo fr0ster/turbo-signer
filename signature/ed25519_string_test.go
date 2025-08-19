@@ -25,9 +25,10 @@ MC4CAQAwBQYDK2VwBCIEIMlz8ym0r5xai1MbDRJo+8HwkaVXWknuQhfFrphnpNwC
 
 		message := "timestamp=1610612740000"
 		// Створення підпису
-		signature := sign.CreateSignature(message)
+		sig, err := sign.CreateSignature(message)
+		assert.NoError(t, err)
 		expected := "pYQHhxozljZc0/wqTz4I1i1GmJbzQpdT8AHILc1ZZHF7YvjsUDRtTVBJpktdx10Z1Iy37wbJJjRtbMDpyx9BCQ=="
-		assert.Equal(t, expected, signature)
+		assert.Equal(t, expected, sig)
 	}()
 }
 
@@ -48,9 +49,11 @@ MC4CAQAwBQYDK2VwBCIEIMlz8ym0r5xai1MbDRJo+8HwkaVXWknuQhfFrphnpNwC
 		assert.Nil(t, err)
 		message := "timestamp=1610612740000"
 		// Створення підпису
-		signature := sign.CreateSignature(message)
+		sig, err := sign.CreateSignature(message)
+		assert.NoError(t, err)
 		// Валідація підпису
-		valid := sign.ValidateSignature(message, signature)
+		valid, err := sign.ValidateSignature(message, sig)
+		assert.NoError(t, err)
 		assert.True(t, valid)
 	}()
 }
@@ -71,8 +74,9 @@ MC4CAQAwBQYDK2VwBCIEIMlz8ym0r5xai1MbDRJo+8HwkaVXWknuQhfFrphnpNwC
 				privateKey)
 		assert.Nil(t, err)
 		message := "timestamp=1610612740000"
-		// Валідація підпису
-		valid := sign.ValidateSignature(message, "wrong_signature")
+		// Валідація підпису (неправильний підпис повинен дати помилку)
+		valid, err := sign.ValidateSignature(message, "wrong_signature")
+		assert.Error(t, err) // Очікуємо помилку для неправильного base64
 		assert.False(t, valid)
 	}()
 }
