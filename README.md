@@ -1,256 +1,218 @@
-# Turbo Signer
+# 🔐 Turbo Signer
 
-## 📍 **Опис модуля**
+Професійна Go бібліотека для створення цифрових підписів з підтримкою різних алгоритмів та архітектурних патернів.
 
-**Turbo Signer** - це простий wrapper для підпису WebAPI та RESTful параметрів. Модуль надає уніфікований інтерфейс для роботи з різними алгоритмами цифрового підпису.
+## 🚀 Особливості
 
-## 🏗️ **Архітектура**
+### ✨ **Підтримувані алгоритми**
+- **HMAC-SHA256** - для API ключів
+- **RSA** - PKCS#1 та PKCS#8 формати
+- **Ed25519** - сучасний алгоритм на основі еліптичних кривих
+- **ECDSA** - з підтримкою різних кривих (P-224, P-256, P-384, P-521)
 
-### **Основні компоненти**
-```
-turbo-signer/
-├── signature/           # Пакет підписів
-│   ├── types.go        # Інтерфейси та типи
-│   ├── hmac.go         # HMAC-SHA256 підписи
-│   ├── ed25519.go      # Ed25519 підписи
-│   ├── rsa.go          # RSA підписи
-│   ├── utils.go        # Утиліти
-│   └── *_test.go       # Тести
-├── types.go             # Основні типи
-├── go.mod               # Залежності
-└── LICENSE              # Ліцензія
-```
+### 🏗️ **Архітектурні патерни**
+- **Dependency Injection** - гнучка архітектура
+- **Factory Pattern** - централізоване створення підписувачів
+- **Strategy Pattern** - різні алгоритми через єдиний інтерфейс
 
-## 🔐 **Алгоритми підпису**
+### ⚡ **Продуктивність**
+- **Кешування ключів** - LRU з TTL
+- **Асинхронні операції** - worker pools та batch processing
+- **Thread-safe** - безпечне використання в goroutines
 
-### **1. HMAC-SHA256**
-- **Призначення**: Симметричний підпис для API ключів
-- **Використання**: Binance, більшість криптобірж
-- **Переваги**: Швидкий, простий у використанні
-- **Недоліки**: Потребує секретний ключ
+## 📦 Встановлення
 
-```go
-sign := signature.NewSignHMAC("api_key", "api_secret")
-signature := sign.CreateSignature("timestamp=1610612740000")
-```
-
-### **2. Ed25519**
-- **Призначення**: Асиметричний підпис нового покоління
-- **Використання**: Сучасні криптографічні системи
-- **Переваги**: Швидкий, безпечний, короткі ключі
-- **Недоліки**: Складніший у налаштуванні
-
-```go
-sign, err := signature.NewSignEd25519("api_key", "public_key.pem", "private_key.pem")
-signature := sign.CreateSignature("timestamp=1610612740000")
-```
-
-### **3. RSA**
-- **Призначення**: Класичний асиметричний підпис
-- **Використання**: Традиційні фінансові системи
-- **Переваги**: Широко підтримується, доведена безпека
-- **Недоліки**: Повільніший, довші ключі
-
-```go
-sign, err := signature.NewSignRSA("api_key", "public_key.pem", "private_key.pem")
-signature := sign.CreateSignature("timestamp=1610612740000")
-```
-
-## 🔧 **API інтерфейс**
-
-### **Інтерфейс Sign**
-```go
-type Sign interface {
-    CreateSignature(queryString string) string
-    SignParameters(params *simplejson.Json) (*simplejson.Json, error)
-    ValidateSignatureParams(params *simplejson.Json) bool
-    ValidateSignature(string, string) bool
-    GetAPIKey() string
-}
-```
-
-### **Основні методи**
-
-#### **CreateSignature(queryString string) string**
-- Створює цифровий підпис для рядка
-- Повертає підпис у hex/base64 форматі
-
-#### **SignParameters(params *simplejson.Json) (*simplejson.Json, error)**
-- Підписує JSON параметри
-- Автоматично додає поле `signature`
-- Повертає підписані параметри
-
-#### **ValidateSignatureParams(params *simplejson.Json) bool**
-- Валідує підпис у параметрах
-- Автоматично видаляє поле `signature` перед перевіркою
-- Повертає `true` якщо підпис валідний
-
-#### **ValidateSignature(message, signature string) bool**
-- Валідує підпис для повідомлення
-- Пряме порівняння без обробки JSON
-
-## 📊 **Приклади використання**
-
-### **HMAC підпис**
-```go
-package main
-
-import (
-    "fmt"
-    "github.com/fr0ster/turbo-signer/signature"
-    "github.com/bitly/go-simplejson"
-)
-
-func main() {
-    // Створення HMAC підпису
-    sign := signature.NewSignHMAC("api_key", "api_secret")
-    
-    // Підпис рядка
-    message := "timestamp=1610612740000"
-    signature := sign.CreateSignature(message)
-    fmt.Printf("Signature: %s\n", signature)
-    
-    // Підпис JSON параметрів
-    params := simplejson.New()
-    params.Set("timestamp", 1610612740000)
-    params.Set("symbol", "BTCUSDT")
-    
-    signedParams, err := sign.SignParameters(params)
-    if err != nil {
-        panic(err)
-    }
-    
-    // Валідація підпису
-    valid := sign.ValidateSignatureParams(signedParams)
-    fmt.Printf("Signature valid: %t\n", valid)
-}
-```
-
-### **Ed25519 підпис**
-```go
-package main
-
-import (
-    "fmt"
-    "github.com/fr0ster/turbo-signer/signature"
-)
-
-func main() {
-    // Створення Ed25519 підпису
-    sign, err := signature.NewSignEd25519(
-        "api_key",
-        "-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----",
-        "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----",
-    )
-    if err != nil {
-        panic(err)
-    }
-    
-    // Створення та валідація підпису
-    message := "timestamp=1610612740000"
-    signature := sign.CreateSignature(message)
-    valid := sign.ValidateSignature(message, signature)
-    
-    fmt.Printf("Signature: %s\n", signature)
-    fmt.Printf("Valid: %t\n", valid)
-}
-```
-
-### **RSA підпис**
-```go
-package main
-
-import (
-    "fmt"
-    "github.com/fr0ster/turbo-signer/signature"
-)
-
-func main() {
-    // Створення RSA підпису
-    sign, err := signature.NewSignRSA(
-        "api_key",
-        "-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----",
-        "-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----",
-    )
-    if err != nil {
-        panic(err)
-    }
-    
-    // Створення та валідація підпису
-    message := "timestamp=1610612740000"
-    signature := sign.CreateSignature(message)
-    valid := sign.ValidateSignature(message, signature)
-    
-    fmt.Printf("Signature: %s\n", signature)
-    fmt.Printf("Valid: %t\n", valid)
-}
-```
-
-## 🧪 **Тестування**
-
-### **Покриття тестами**
-- **HMAC**: Параметри та рядки
-- **Ed25519**: Параметри та рядки  
-- **RSA**: Параметри та рядки
-- **Утиліти**: Функції перетворення
-
-### **Запуск тестів**
 ```bash
-cd turbo-signer
-go test ./signature/...
+go get github.com/fr0ster/turbo-signer
 ```
 
-## 🔒 **Безпека**
+## 🔧 Швидкий старт
 
-### **Рекомендації**
-1. **HMAC**: Використовуйте для API ключів
-2. **Ed25519**: Для сучасних систем з високими вимогами безпеки
-3. **RSA**: Для сумісності з існуючими системами
+### Базове використання
 
-### **Обмеження**
-- **HMAC**: Секретний ключ має бути безпечним
-- **Ed25519**: Потребує правильне форматування PEM
-- **RSA**: Мінімальний розмір ключа 2048 біт
+```go
+package main
 
-## 📈 **Версії та оновлення**
+import (
+    "fmt"
+    "github.com/fr0ster/turbo-signer/signature"
+)
 
-### **v0.1.7 (2024-08-23)**
-- Рефакторинг функції `signParameters`
+func main() {
+    // Створення HMAC підписувача
+    hmacSigner := signature.NewSignHMAC("api_key", "secret_key")
+    
+    // Створення підпису
+    message := "timestamp=1234567890&symbol=BTCUSDT"
+    signature := hmacSigner.CreateSignature(message)
+    
+    fmt.Printf("Signature: %s\n", signature)
+}
+```
 
-### **v0.1.6 (2024-08-21)**
-- Функція `convertSimpleJSONToString` стала публічною
+### Використання через фабрику
 
-### **v0.1.5 (2024-09-15)**
-- Рефакторинг та перейменування функцій
+```go
+package main
 
-### **v0.1.4 (2024-09-15)**
-- Покращена валідація параметрів без побічних ефектів
+import (
+    "fmt"
+    "github.com/fr0ster/turbo-signer/signature"
+)
 
-## 🎯 **Застосування**
+func main() {
+    // Конфігурація для RSA підписувача
+    config := signature.SignerConfig{
+        Algorithm:  "rsa",
+        APIKey:     "api_key",
+        PublicKey:  publicKeyPEM,
+        PrivateKey: privateKeyPEM,
+    }
+    
+    // Створення через фабрику
+    signer, err := signature.CreateSigner(config)
+    if err != nil {
+        panic(err)
+    }
+    
+    // Використання
+    message := "Hello, World!"
+    signature := signer.CreateSignature(message)
+    fmt.Printf("RSA Signature: %s\n", signature)
+}
+```
 
-### **Криптобіржі**
-- Binance API
-- Coinbase API
-- Kraken API
+### Асинхронні операції
 
-### **Фінансові системи**
-- REST API
-- WebSocket API
-- Webhook підписи
+```go
+package main
 
-### **Загальне використання**
-- Автентифікація запитів
-- Верифікація даних
-- Цифрові підписи документів
+import (
+    "fmt"
+    "github.com/fr0ster/turbo-signer/signature"
+)
 
-## 🚀 **Майбутні покращення**
+func main() {
+    // Створення асинхронного підписувача
+    asyncSigner := signature.NewAsyncSigner(4) // 4 workers
+    
+    // Асинхронне створення підпису
+    request := signature.SignRequest{
+        Message: "Async message",
+        Signer:  signature.NewSignHMAC("key", "secret"),
+    }
+    
+    asyncSigner.SignAsync(request)
+    result := asyncSigner.GetResult()
+    
+    fmt.Printf("Async signature: %s\n", result.Signature)
+}
+```
 
-1. **Додаткові алгоритми**: ECDSA, DSA
-2. **Підтримка JWT**: JSON Web Tokens
-3. **Асинхронні операції**: Go routines для великих обсягів
-4. **Кешування ключів**: Оптимізація продуктивності
-5. **Метрики**: Prometheus інтеграція
+## 🏗️ Архітектура
 
-## 📄 **Ліцензія**
+### SignerFactory
 
-Цей проект розповсюджується під ліцензією, деталі якої можна знайти в файлі LICENSE.
+```go
+// Створення фабрики
+factory := signature.NewSignerFactory()
+
+// Реєстрація власного креатора
+factory.RegisterCreator("custom", func(config signature.SignerConfig) (signature.Sign, error) {
+    // Ваша реалізація
+    return customSigner, nil
+})
+
+// Створення підписувача
+signer, err := factory.CreateSigner(signature.SignerConfig{
+    Algorithm: "custom",
+    // ... інші параметри
+})
+```
+
+### Кешування ключів
+
+```go
+// Глобальний кеш ключів
+cache := signature.GlobalKeyCache
+
+// Завантаження ключа з кешу
+privateKey, err := signature.LoadRSAPrivateKeyFromCache("key_id")
+if err != nil {
+    // Завантаження з файлу та кешування
+    privateKey, err = signature.LoadRSAPrivateKeyFromCache("key_id")
+}
+```
+
+## 🧪 Тестування
+
+```bash
+# Запуск всіх тестів
+go test ./...
+
+# Запуск тестів конкретного пакету
+go test ./signature -v
+
+# Запуск тестів з покриттям
+go test ./signature -cover
+```
+
+## 🔨 Збірка
+
+```bash
+# Збірка всіх прикладів
+make build
+
+# Запуск прикладів
+make run-factory
+make run-async
+
+# Очищення
+make clean
+
+# Допомога
+make help
+```
+
+## 📚 Документація
+
+- [**Phase 1**](PHASE1_IMPROVEMENTS.md) - Критичні покращення
+- [**Phase 2**](README_IMPROVEMENTS.md) - Оптимізація та розширення  
+- [**Phase 3**](PHASE3_ARCHITECTURE.md) - Архітектурні покращення
+- [**TODO**](TODO.md) - Поточний статус розробки
+
+## 🚀 Roadmap
+
+### ✅ **Завершено**
+- **Phase 1**: Покращена обробка помилок
+- **Phase 2**: ECDSA, кешування, асинхронні операції
+- **Phase 3**: Dependency Injection, Factory Pattern, система збірки
+
+### 🔮 **Майбутнє**
+- Покращення ECDSA інтерфейсу
+- Додавання нових алгоритмів
+- Метрики та моніторинг
+- WebAssembly підтримка
+
+## 🤝 Внесок
+
+1. Fork репозиторію
+2. Створіть feature branch (`git checkout -b feature/amazing-feature`)
+3. Зробіть коміт змін (`git commit -m 'Add amazing feature'`)
+4. Push до branch (`git push origin feature/amazing-feature`)
+5. Відкрийте Pull Request
+
+## 📄 Ліцензія
+
+Цей проект ліцензовано під MIT License - дивіться [LICENSE](LICENSE) файл для деталей.
+
+## 🆘 Підтримка
+
+Якщо у вас є питання або проблеми:
+- Створіть [Issue](https://github.com/fr0ster/turbo-signer/issues)
+- Перегляньте [документацію](docs/)
+- Перевірте [приклади](examples/)
+
+---
+
+**Turbo Signer** - професійна бібліотека для цифрових підписів в Go! 🚀
