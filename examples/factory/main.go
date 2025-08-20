@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/fr0ster/turbo-signer/signature"
+	"github.com/fr0ster/turbo-signer/v2/signature"
 )
 
 func main() {

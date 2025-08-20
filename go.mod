@@ -1,6 +1,6 @@
-module github.com/fr0ster/turbo-signer
+module github.com/fr0ster/turbo-signer/v2
 
-go 1.23.0
+go 1.24.3
 
 require (
 	github.com/bitly/go-simplejson v0.5.1

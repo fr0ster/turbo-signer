@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/bitly/go-simplejson"
-	"github.com/fr0ster/turbo-signer/signature"
+	"github.com/fr0ster/turbo-signer/v2/signature"
 	"github.com/stretchr/testify/assert"
 )
 
