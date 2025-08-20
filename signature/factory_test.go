@@ -107,9 +107,11 @@ func TestCreateEd25519Signer(t *testing.T) {
 
 	// Використовуємо тестові ключі з існуючих тестів
 	const publicKey = `-----BEGIN PUBLIC KEY-----
-MCowBQYDK2VwAyEAw9lhPqnUzA1vnPz+vYpzl9BQwGVUrsKqEk1co+bKSYQ=`
+MCowBQYDK2VwAyEAw9lhPqnUzA1vnPz+vYpzl9BQwGVUrsKqEk1co+bKSYQ=
+-----END PUBLIC KEY-----`
 	const privateKey = `-----BEGIN PRIVATE KEY-----
-MC4CAQAwBQYDK2VwBCIEIMlz8ym0r5xai1MbDRJo+8HwkaVXWknuQhfFrphnpNwC`
+MC4CAQAwBQYDK2VwBCIEIMlz8ym0r5xai1MbDRJo+8HwkaVXWknuQhfFrphnpNwC
+-----END PRIVATE KEY-----`
 
 	config := signature.SignerConfig{
 		Algorithm:  "ed25519",
