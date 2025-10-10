@@ -1,5 +1,14 @@
 # Release Notes for Turbo-Signer
 
+## v2.0.3
+
+### Release Date: 2025-10-10
+
+### Dependencies
+- Updated `github.com/stretchr/testify` to v1.10.0 in `go.mod` to leverage the latest test helpers.
+
+---
+
 ## v0.1.7
 
 ### Release Date: 2024-08-23
