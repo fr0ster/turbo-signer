@@ -4,7 +4,7 @@ go 1.24.3
 
 require (
 	github.com/bitly/go-simplejson v0.5.1
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 )
 
 require (
